@@ -1,0 +1,107 @@
+*{
+    margin: 0;
+    padding: 0;
+    background-color: #F6ECF5;
+  }
+  
+  .game-board{
+    align-items: center;
+    background: #F6F6EB;
+    border: 2px solid black;
+    display: flex;
+    flex-wrap: wrap;
+    height: auto;
+    justify-content: center;
+    padding: 0.3rem;
+    width: 90%;
+  }
+  
+  .game-brick{
+    align-items: center;
+    background: #D5D6EA;
+    border: 1px solid black;
+    border-radius: 6px;
+    display: flex;
+    font-weight: 800;
+    height: 3.2rem;
+    justify-content: center;
+    margin: 0.08rem;
+    width: 18%;
+  }
+  
+  .game-brick:hover{
+    background-color: #F6F6EB;
+  }
+  
+  .main-container{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    /* height: 100vh; */
+  }
+
+  .null-brick{
+    background: #F6F6EB;
+    border: 1px solid#F6F6EB;
+    height: 3.2rem;
+    margin: 0.08rem;
+    width: 18%;
+  }
+  
+  .row{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .shuffle-button{
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    width: 8rem;
+    height: 3rem;
+    margin: 1.5rem;
+    border-radius: 2%;
+  }
+  
+  .winning-container{
+    height: 4rem;
+    margin: 4rem;
+  }
+  
+  .winning-title{
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  /* MEDIA QUERIES */
+  
+  @media screen and (min-width: 41.75rem) {
+  
+    .game-brick{
+      height: 7rem;
+      font-size: 25px;
+      width: 19%;
+    }
+  
+    .null-brick{
+      height: 7rem;
+      width: 19%;
+  
+    }
+  
+    .shuffle-button{
+      width: 11rem;
+      height: 4rem;
+      margin: 3rem;
+      font-size: 28px;
+      border-radius: 5px;
+    }
+  
+    .game-board{
+      max-width: 600px;
+    }
+  }
