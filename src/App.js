@@ -3,69 +3,18 @@ import cloneDeep from 'lodash/cloneDeep'
 import './style/game.css'
 import Brick from './components/Brick';
 import WinMessage from './components/WinMessage'
+import ShuffleButton from './components/ShuffleButton'
+import utils from './utils'
 
-// Game board 
-const generateBoard = () => {
-  const numberOfRows = 3;
-  const numberOfColumns = 5;
-  const board = [];
-  let tileNumber = 1;
-
-  for (let rowNumber = 1; rowNumber <= numberOfRows; rowNumber += 1) {
-    const row = [];
-    for (let columnNumber = 1; columnNumber <= numberOfColumns; columnNumber += 1) {
-      if (rowNumber === numberOfRows && columnNumber === numberOfColumns) {
-        row.push(null);
-      } else {
-        row.push(tileNumber)
-        tileNumber += 1;
-      }
-    }
-    board.push(row);
-  }
-  return board;
-}
-
-// Initial state of board returned by generateBoard() is an ordered array, so we can use this array to define the winning array and state.
-const winningArray = generateBoard();
-
-const shuffleArray = (board) => {
-  const newGame = cloneDeep(board);
-
-  newGame.forEach((row, rowIndex) => {
-    row.forEach((column, columnIndex) => {
-      const rowIndex1 = Math.floor(Math.random() * (newGame.length));
-      const columnIndex1 = Math.floor(Math.random() * (newGame.length));
-      const temp = newGame[rowIndex][columnIndex];
-      newGame[rowIndex][columnIndex] = newGame[rowIndex1][columnIndex1];
-      newGame[rowIndex1][columnIndex1] = temp;
-    })
-  })
-  return newGame;
-}
-
-// Compares board with winningArray to see if the game is won
-const isGameWon = (board) => {
-  let isWon = true;
-  board.forEach((row, rowIndex) => {
-    row.forEach((column, columnIndex) => {
-      if (board[rowIndex][columnIndex] !== winningArray[rowIndex][columnIndex]) {
-        isWon = false;
-      }
-    })
-  })
-  return isWon;
-}
-
-export const App = () => {
+const useGameState = () => {
   const [won, setWon] = useState(false);
-  const [currentGame, setCurrentGame] = useState(shuffleArray(winningArray));
+  const [currentGame, setCurrentGame] = useState(utils.shuffleArray());
 
+  // Initial state of board returned by generateBoard() is an ordered array, so we can use this array to define the winning array and state.
+  const winningArray = utils.generateBoard();
 
-  // Check if the brick can move
-  const canMove = (currentRowIndex, currentColumnIndex, brickValue, rowSize) => {
-    const newGame = cloneDeep(currentGame);
-
+  const setGameState = (currentRowIndex, currentColumnIndex, brickValue, rowSize) => {
+    let newGame = cloneDeep(currentGame);
     // Checking if brick can move up
     if (currentRowIndex !== 0 && currentGame[currentRowIndex - 1][currentColumnIndex] === null) {
       newGame[currentRowIndex - 1][currentColumnIndex] = brickValue;
@@ -84,22 +33,31 @@ export const App = () => {
       newGame[currentRowIndex][currentColumnIndex] = null;
     }
     setCurrentGame(newGame);
-    setWon(isGameWon(newGame));
+    setWon(utils.isGameWon(newGame, winningArray));
   }
 
-  // Sätter vilkor för shuffle för att uppdatera state av won tillbaka till false
-  const handleShuffle = () => {
-    const newGame = cloneDeep(currentGame);
+  return { won, setWon, currentGame, setCurrentGame, setGameState };
+}
+
+export const App = () => {
+  const { won, setWon, currentGame, setCurrentGame, setGameState } = useGameState();
+
+  // Check if the brick can move
+  const canMove = (currentRowIndex, currentColumnIndex, brickValue, rowSize) => {
+    setGameState(currentRowIndex, currentColumnIndex, brickValue, rowSize);
+  }
+
+  const startNewGame = () => {
+    // Sätter vilkor för shuffle för att uppdatera state av won tillbaka till false
     if (won) {
       setWon(false);
-      return shuffleArray(newGame);
-    } else {
-      return shuffleArray(newGame);
     }
+
+    setCurrentGame(utils.shuffleArray());
   }
 
   return (
-    <article className="main-container">
+    <div className="main-container">
       {won && (<WinMessage />
       )}
       <div className="game-board">
@@ -117,13 +75,10 @@ export const App = () => {
           </div>
         ))}
       </div>
-      <button
-        className="shuffle-button"
-        type="button"
-        onClick={() => setCurrentGame(handleShuffle(currentGame))}>
-        Shuffle
-      </button>
-    </article>
+      <ShuffleButton
+        onClick={startNewGame}
+      />
+    </div>
   )
 }
 
