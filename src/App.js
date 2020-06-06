@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import cloneDeep from 'lodash/cloneDeep'
 import './style/game.css'
+import Brick from './components/Brick';
+import WinMessage from './components/WinMessage'
 
 // Game board 
 const generateBoard = () => {
@@ -61,7 +63,7 @@ export const App = () => {
 
 
   // Check if the brick can move
-  const canMove = (currentRowIndex, currentColumnIndex, brickValue, row) => {
+  const canMove = (currentRowIndex, currentColumnIndex, brickValue, rowSize) => {
     const newGame = cloneDeep(currentGame);
 
     // Checking if brick can move up
@@ -73,7 +75,7 @@ export const App = () => {
       newGame[currentRowIndex + 1][currentColumnIndex] = brickValue;
       newGame[currentRowIndex][currentColumnIndex] = null;
       // Checking if brick can move to the right
-    } else if (currentColumnIndex !== row.length - 1 && currentGame[currentRowIndex][currentColumnIndex + 1] === null) {
+    } else if (currentColumnIndex !== rowSize - 1 && currentGame[currentRowIndex][currentColumnIndex + 1] === null) {
       newGame[currentRowIndex][currentColumnIndex + 1] = brickValue;
       newGame[currentRowIndex][currentColumnIndex] = null;
       // Checking if brick can move to the left
@@ -98,24 +100,19 @@ export const App = () => {
 
   return (
     <article className="main-container">
-      <div className="winning-container">
-        {won && (
-          <h1 className="winning-title">YOU WIN!</h1>
-        )}
-      </div>
+      {won && (<WinMessage />
+      )}
       <div className="game-board">
         {currentGame.map((row, currentRowIndex) => (
           <div key={currentRowIndex} className="row">
             {row.map((brickValue, currentColumnIndex) => (
-              <div
+              <Brick
                 key={`${currentRowIndex}-${currentColumnIndex}`}
-                className={brickValue !== null
-                  ? 'game-brick'
-                  : 'null-brick'}
-                role="button"
-                onClick={() => canMove(currentRowIndex, currentColumnIndex, brickValue, row)}>
-                {brickValue}
-              </div>
+                rowIndex={currentRowIndex}
+                colIndex={currentColumnIndex}
+                rowSize={row.length}
+                value={brickValue}
+                onClick={canMove} />
             ))}
           </div>
         ))}
