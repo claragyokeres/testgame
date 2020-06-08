@@ -8,6 +8,7 @@ Use npm install to install the project.
 Feel free to clone it and use npm start. 
 
 ## Technologies used 
+This project is used from template React-Starter by Technigo. 
 This project is built in React. 
 
 ## Contributing
