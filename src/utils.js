@@ -35,7 +35,7 @@ const utils = {
         return newGame;
     },
 
-    // Compares board with winningArray to see if the game is won
+    // Board and winningArray compared, if won, return isWon
     isGameWon: (board, winningArray) => {
         let isWon = true;
         board.forEach((row, rowIndex) => {
