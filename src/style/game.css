@@ -50,9 +50,10 @@
     background: #F6F6EB;
     border: 1px solid#F6F6EB;
     border-radius: 7px;
+    display: flex;
     height: 3.2rem;
     margin: 0.08rem;
-    width: 18%;
+    width: 20%;
   }
   
   .row{
